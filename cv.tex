@@ -1,0 +1,477 @@
+% set options for packages that are automatically loaded by moderncv
+% microtype: advanced typography
+\PassOptionsToPackage{protrusion=true, babel=true}{microtype}
+% hyperref
+\PassOptionsToPackage{breaklinks=true, colorlinks=true,
+citecolor=citeyellow, linkcolor=linkred, urlcolor=urlblue}{hyperref}
+
+
+% font size options: '10pt', '11pt', '12pt'
+% paper size options: 'a4paper', 'letterpaper', 'a5paper', 'legalpaper', 
+% 'executivepaper', 'landscape'
+% font family options: 'sans', 'roman'
+\documentclass[11pt, letterpaper, roman]{moderncv}
+
+\RequireXeTeX %Force XeTeX check
+
+
+\usepackage{fontspec}
+\usepackage{fontawesome}
+\usepackage{academicons}
+\usepackage{multirow}
+
+
+% moderncv options
+% theme options: 'casual', 'classic', 'banking', 'oldstyle', 'fancy'
+\moderncvstyle{banking}
+% color options: 'black', 'blue', 'burgundy', 'green', 'grey', 'orange', 
+%'purple' and 'red'
+\moderncvcolor{black}
+
+
+% fonts and encoding
+% inputenc: support for writing UTF-encoded characters (accents, etc.)
+\usepackage[utf8]{inputenc}
+% fix-cm: use default (OT1) font sizes (in conjunction with T1 fontenc)
+\usepackage{fix-cm}
+% fontenc: better font encoding than default ascii
+\usepackage[T1]{fontenc}
+% sans serif: Libertine
+%\usepackage{libertine}
+\setsansfont[Mapping=tex-text]{Linux Libertine}
+% serif font for the titles: Gill Sans
+\usepackage{gillius}
+\renewcommand*{\namefont}{\gillius\Huge\bfseries\upshape}
+\renewcommand*{\titlefont}{\gillius\Huge\mdseries\upshape}
+\renewcommand*{\sectionfont}{\gillius\Large\bfseries\upshape}
+\renewcommand*{\subsectionfont}{\gillius\large\upshape\fontseries{sb}\selectfont}
+% monospaced font: Consolas
+\setmonofont[Scale=0.95]{Consolas}
+
+
+% babel: English hyphenation
+\usepackage[american]{babel}
+% biblatex: bibliography
+\usepackage[backend=biber, style=numeric-comp, hyperref=auto, 
+bibencoding=inputenc, defernumbers=true, isbn=false, maxalphanames=1, 
+labelalpha=true, maxbibnames=99, minbibnames=4, url=false, 
+sorting=none]{biblatex}
+\addbibresource{publications.bib}
+\addbibresource{presentations.bib}
+% csquotes: context sensitive quotation for BibLaTeX
+\usepackage{csquotes}
+% datetime: add last updated date to page footer
+\usepackage{datetime}
+% geometry: adjust page margins
+\usepackage[scale=0.8]{geometry}
+% longtable: split table over page breaks
+\usepackage{longtable}
+% xcolor: define fancy colors
+\definecolor{urlblue}{HTML}{191970}
+\definecolor{citeyellow}{HTML}{706F19}
+\definecolor{linkred}{HTML}{701945}
+
+
+% newline in table cells
+\newcommand{\specialcell}[2][c]{%
+\begin{tabular}[#1]{@{}l@{}}#2\end{tabular}}
+
+\usepackage{makecell}
+
+
+% new cv entry without company/university element  
+\newcommand*{\cventrysimple}[5][.25em]{
+  \begin{tabular*}{\maincolumnwidth}{l@{\extracolsep{\fill}}r}%
+    {\itshape #3\ifthenelse{\equal{#4}{}}{}{, #4}} & {\itshape #2}\\%
+  \end{tabular*}%
+  \ifx&#5&%
+  \else{\\%
+    \begin{minipage}{\maincolumnwidth}%
+      \small#5%
+    \end{minipage}}\fi%
+  \par\addvspace{#1}}
+  
+% redefine cventry to remove the space between company/university and location
+\renewcommand*{\cventry}[7][.25em]{
+  \begin{tabular*}{\maincolumnwidth}{l@{\extracolsep{\fill}}r}%
+    {\bfseries #4\ifthenelse{\equal{#5}{}}{}{, #5}}\\%
+    {\itshape #3\ifthenelse{\equal{#6}{}}{}{, #6}} & {\itshape #2}\\%
+  \end{tabular*}%
+  \ifx&#7&%
+  \else{\\%
+    \begin{minipage}{\maincolumnwidth}%
+      \small#7%
+    \end{minipage}}\fi%
+  \par\addvspace{#1}}
+  
+
+% highlight my name in the publications
+% http://tex.stackexchange.com/a/327046
+\def\makenamesetup{%
+  \def\bibnamedelima{~}%
+  \def\bibnamedelimb{ }%
+  \def\bibnamedelimc{ }%
+  \def\bibnamedelimd{ }%
+  \def\bibnamedelimi{ }%
+  \def\bibinitperiod{.}%
+  \def\bibinitdelim{~}%
+  \def\bibinithyphendelim{.-}}    
+\newcommand*{\makename}[2]{\begingroup\makenamesetup\xdef#1{#2}\endgroup}
+\newcommand*{\boldname}[3]{%
+  \def\lastname{#1}%
+  \def\firstname{#2}%
+  \def\firstinit{#3}}
+\boldname{}{}{}
+\renewcommand{\mkbibnamegiven}[1]{%
+  \makename{\currname}{#1}%
+  \makename{\findname}{\firstname}%
+  \makename{\findinit}{\firstinit}%
+  \ifboolexpr{ test {\ifdefequal{\currname}{\findname}}%
+    or test {\ifdefequal{\currname}{\findinit}} }%
+  {\mkbibbold{#1}}{#1}%
+}
+\renewcommand{\mkbibnamefamily}[1]{%
+  \makename{\currname}{#1}%
+  \makename{\findname}{\lastname}%
+  \ifboolexpr{ test {\ifdefequal{\currname}{\findname}} }%
+  {\mkbibbold{#1}}{#1}%
+}
+
+
+% decreasing citation count
+% https://tex.stackexchange.com/a/22770
+% count the total number of entries in each refsection
+\AtDataInput{%
+\csnumgdef{entrycount:\therefsection}{%
+\csuse{entrycount:\therefsection}+1}}
+% print the labelnumber as the total number of entries in the
+% current refsection, minus the actual labelnumber, plus one
+\DeclareFieldFormat{labelnumber}{\mkbibdesc{#1}}    
+\newrobustcmd*{\mkbibdesc}[1]{%
+\number\numexpr\csuse{entrycount:\therefsection}+1-#1\relax}
+% fix the citation counts to handle multi-digit numbers
+\settowidth{\labelnumberwidth}{8888}
+
+
+% limited width and aligned table columns
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}p{#1}}
+
+
+% uncomment to suppress automatic page numbering for CVs longer than one page
+%\nopagenumbers{}
+
+\newcommand*\orcidsocialsymbol{{\small\aiOrcid}~}
+\renewcommand*\emailsymbol{{\faEnvelope~}}
+
+
+% personal information
+\name{Wout}{Bittremieux}
+\address{Skaggs School of Pharmacy and Pharmaceutical Sciences}{9500 Gilman 
+Drive}{La Jolla, CA 92093}
+%\phone{+1~206~751~4627}
+%\phone{+32~474~26~20~60}
+\email{wbittremieux@ucsd.edu}
+\homepage{www.bittremieux.be}
+%\social[twitter]{bittremieux}
+%\social[github]{bittremieux}
+\social[orcid][orcid.org/0000-0002-3105-1359]{0000-0002-3105-1359}
+
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%% CURRICULUM VITAE %%%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\clearpage
+
+\makecvtitle
+% reduce the white space under the name
+\vspace*{-1cm}
+
+% add a last updated tag for the web version
+\lfoot{\emph{Last updated \monthname~\the\year}}
+
+
+\section{Work experience}
+
+\cventry{Jul.\ 2019 -- current}{Postdoctoral researcher}%
+{\href{https://ucsd.edu/}{University of California San Diego}}%
+{La Jolla, CA, USA}{}%
+{Large-scale machine learning of mass spectrometry metabolomics data 
+repositories.}
+\cventry{Mar.\ 2017 -- current}{Postdoctoral researcher}%
+{\href{https://www.uantwerpen.be/en/}{University of Antwerp}}%
+{Antwerp, Belgium}{}%
+{Investigate how machine learning can be used to solve bioinformatics 
+challenges, with a special focus on mass spectrometry proteomics and 
+metabolomics.}
+\cventry{Sept.\ 2017 -- Jun.\ 2019}{Postdoctoral researcher}%
+{\href{https://www.washington.edu/}{University of Washington}}%
+{Seattle, WA, USA}{}%
+{Develop deep learning models for the analysis of mass spectrometry proteomics 
+data.}
+\cventry{Sept.\ 2016 -- Dec.\ 2016}{Visiting researcher}%
+{\href{http://www.sun.ac.za/english}{Stellenbosch University}}%
+{Cape Town, South Africa}{}%
+{Develop computational quality control techniques for mass spectrometry 
+proteomics.}
+
+
+\section{Education}
+
+% {years}{degree/job title}{institution/employer}{location}{grade}{description}
+\cventry{Mar.\ 2013 -- Feb.\ 2017}{PhD in Computer Science}%
+{\href{https://www.uantwerpen.be/en/}{University of Antwerp}}%
+{Antwerp, Belgium}{}%
+{PhD thesis: ``Computational solutions for quality control of mass 
+spectrometry-based proteomics''.}
+\cventry{Sept.\ 2010 -- Jun.\ 2012}{Master in Computer Science}%
+{\href{https://www.uhasselt.be/en}{Hasselt University}}{Diepenbeek, Belgium}%
+{completed with great honor}{Master thesis: ``Time series similarity 
+search''.}
+\cventrysimple{Sept.\ 2007 -- Jun.\ 2010}{Bachelor in Computer 
+Science}{completed with honor}{}
+
+
+% highlight my name in the author lists
+\boldname{Bittremieux}{Wout}{}
+
+\section{Publications}
+
+\begin{refsection}
+\nocite{Beirnaert2019,
+Bittremieux2018, Willems2018, Mrzic2018, Bittremieux2017c, DeNeuter2018,
+Deutsch2017, Vizcaino2017, Bittremieux2017b, Bittremieux2017,
+Meysman2016, Maes2016, Bittremieux2016, 
+Bittremieux2015, Naulaerts2015, 
+Vu2014, Walzer2014, Bittremieux2014, Kelchtermans2014}
+
+\printbibliography[heading=subbibliography, title={Journal articles}]
+\end{refsection}
+
+\begin{refsection}
+\nocite{Meysman2015}
+
+\printbibliography[heading=subbibliography, resetnumbers=true, 
+title={Conference proceedings}]
+\end{refsection}
+
+\begin{refsection}
+\nocite{Bittremieux2019a, Gielis2018, Liu2018, Pino2019, Bittremieux2019,
+Bittremieux2017a}
+
+\printbibliography[heading=subbibliography, resetnumbers=true, title={Other 
+publications}]
+\end{refsection}
+
+
+\section{Presentations}
+
+\begin{refsection}
+\nocite{Bittremieux2018_Cascadia,
+Bittremieux2017_FWET,
+Bittremieux2016_BLT, Bittremieux2016_ASMS,
+Bittremieux2015_BRD, Bittremieux2015_BBC, Bittremieux2015_BBCSS,
+Bittremieux2014_BBC, Bittremieux2014_BRD}
+
+\printbibliography[heading=subbibliography, title={Oral presentations}]
+\end{refsection}
+
+\begin{refsection}
+\nocite{Bittremieux2019_ASMS,
+Bittremieux2018_retreat,
+Bittremieux2017_ASMS_smartlab, Bittremieux2017_ASMS_dl,
+Bittremieux2016_ASMS1, 
+Bittremieux2015_ASMS, 
+Bittremieux2014_BePAc, Bittremieux2014_ECCB, Bittremieux2014_ASMS, 
+Bittremieux2013_BBC}
+
+\printbibliography[heading=subbibliography, title={Poster presentations}]
+\end{refsection}
+
+\begin{refsection}
+\nocite{Bittremieux2015_ASMS1}
+
+\printbibliography[heading=subbibliography, title={Software demonstrations}]
+\end{refsection}
+
+% don't highlight my name anymore
+\def\FormatName#1{#1}
+
+
+\section{Funding}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+2018--2019 & Belgian American Educational Foundation (BAEF): postdoctoral 
+fellowship\\
+2017--2021 & Research Foundation -- Flanders (FWO): postdoctoral fellowship\\
+\end{longtable}
+}
+
+
+\section{Awards}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+2019 & Research Foundation -- Flanders (FWO): travel fellowship to attend the 
+Human Proteome Organization -- Proteomics Standards Initiative (HUPO--PSI) 
+Spring Meeting 2019 in Cape Town, South Africa\\
+2017 & Research Foundation -- Flanders (FWO): travel fellowship for a 
+nine-month research stay at the University of Washington in Seattle, WA, USA\\
+2017 & Research Foundation -- Flanders (FWO): travel fellowship to attend the 
+annual conference of the American Society for Mass Spectrometry (ASMS) 2017 in 
+Indianapolis, IN, USA\\
+2016 & Research Foundation -- Flanders (FWO): travel fellowship for a 
+three-month research stay at Stellenbosch University in Cape Town, South 
+Africa\\
+2016 & Research Foundation -- Flanders (FWO): travel fellowship to attend the 
+annual conference of the American Society for Mass Spectrometry (ASMS) 2016 in 
+San Antonio, TX, USA\\
+2015 & Benelux Bioinformatics Conference (BBC) 2015: best oral presentation 
+award\\
+\end{longtable}
+}
+
+
+\section{Teaching}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+\makecell[tr]{2017} &
+\makecell[tl]{Introduction to computational biology
+\enskip\textbullet\enskip Bachelor of Computer Science\\
+\qquad teaching assistant}\\
+\makecell[tr]{2016} &
+\makecell[tl]{Project work
+\enskip\textbullet\enskip Bachelor of Mathematics\\
+\qquad teaching assistant}\\
+\makecell[tr]{2014--2015} &
+\makecell[tl]{Data mining
+\enskip\textbullet\enskip Master of Biochemistry and Biotechnology\\
+\qquad teaching assistant}\\
+\makecell[tr]{2015} &
+\makecell[tl]{Data mining
+\enskip\textbullet\enskip Master of Computer Science\\
+\qquad guest lecturer}\\
+\end{longtable}
+}
+
+\section{Student supervision}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+\makecell[tr]{2019} &
+\makecell[tl]{Stephen Blaskowski \enskip\textbullet\enskip Molecular 
+Engineering PhD program: Internship\\
+\qquad ``Using machine learning to speed up calibration of tandem mass 
+spectrometry\\\qquad database search''}\\
+\makecell[tr]{2017} &
+\makecell[tl]{Joeri Reyns \enskip\textbullet\enskip Master of Computer 
+Science: Thesis\\
+\qquad ``Protein identification using deep neural networks''}\\
+\makecell[tr]{2017} &
+\makecell[tl]{Keerthana Sanala Prakash \enskip\textbullet\enskip 
+Master of Computer Science: Research internship\\
+\qquad ``Temporal mining of mass spectrometry quality control data''}\\
+\makecell[tr]{2016} &
+\makecell[tl]{Phui San Cheong \enskip\textbullet\enskip Master of 
+Computer Science: Research internship\\
+\qquad ``Implement frequent itemset-based clustering in pyGCluster''}\\
+\makecell[tr]{2016} &
+\makecell[tl]{Robin Verachtert \enskip\textbullet\enskip Bachelor of 
+Computer Science: Research internship\\
+\qquad ``Automatic discovery of artefacts in mass spectrometry data''}\\
+\end{longtable}
+}
+
+
+\section{Referee}
+
+Review for journals:
+\emph{Analytical Chemistry},
+\emph{Artificial Intelligence in Medicine},
+\emph{IEEE/ACM Transactions on Computational Biology and Bioinformatics},
+\emph{Journal of Proteome Research},
+\emph{Mass Spectrometry Reviews},
+\emph{PLOS ONE},
+\emph{PROTEOMICS}.
+
+Review for conferences:
+\emph{Annual International Conference on Research in Computational Molecular 
+Biology 2019 (RECOMB 2019)},
+\emph{Conference on Intelligent Systems for Molecular Biology 2018 (ISMB'18)},
+\emph{International Workshop on Data Mining in Bioinformatics 2016 (BioKDD'16)},
+\emph{International Workshop on Data Mining in Bioinformatics 2019 (BioKDD'19)},
+\emph{NIPS Workshop on Machine Learning in Computational Biology 2017 (NIPS 
+MLCB 2017)}.
+
+
+\section{Scientific meetings organized}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+\makecell[tr]{2020} & 
+\makecell[tl]{\href{https://www.proteomics-academy.org/eubic-dev-meeting-2020}%
+{European Bioinformatics Community (EuBIC) Developer's Meeting, Nyborg, 
+Denmark}\\
+\qquad member of the organizing committee}\\
+\makecell[tr]{2019} & 
+\makecell[tl]{\href{https://www.proteomics-academy.org/eubic-winter-school-2019}%
+{European Bioinformatics Community (EuBIC) Winter School, Zakopane, Poland}\\
+\qquad member of the organizing committee}\\
+\makecell[tr]{2018} & 
+\makecell[tl]{\href{http://uahost.uantwerpen.be/eubic18/}{European 
+Bioinformatics Community (EuBIC) Developer's Meeting, Ghent, Belgium}\\
+\qquad main organizer}\\
+\makecell[tr]{2015} &
+\makecell[tl]{\href{http://www.bbc2015.be/}{Benelux Bioinformatics Conference 
+(BBC), Antwerp, Belgium}\\
+\qquad member of the organizing committee}\\
+\makecell[tr]{2014} &
+\makecell[tl]{Belgian Proteomics Association Symposium (BePAc), Brussels, 
+Belgium\\
+\qquad member of the local organizing committee}\\
+\end{longtable}
+}
+
+
+\section{Membership of scientific organizations}
+
+{
+\renewcommand{\arraystretch}{1.25}
+\setlength{\tabcolsep}{6pt}
+\begin{longtable}{R{52pt}p{\textwidth-70pt}}
+\makecell[tr]{2017--\ldots} & 
+\makecell[tl]{\href{https://www.proteomics-academy.org/}{European 
+Bioinformatics Community (EuBIC)}\\
+\qquad member}\\
+\makecell[tr]{2016--}\ldots &
+\makecell[tl]{\href{http://psidev.info/}{Human Proteome 
+Organization (HUPO) -- Proteomics Standards Initiative (PSI)}\\
+\qquad secretary of the Quality Control working group}\\
+\makecell[tr]{2013--}\ldots &
+\makecell[tl]{\href{http://www.asms.org/}{American Society of 
+Mass Spectrometry (ASMS)}\\
+\qquad member}\\
+\makecell[tr]{2014--2015} &
+\makecell[tl]{\href{https://www.iscb.org/}{International Society 
+for Computational Biology (ISCB)}\\
+\qquad member}\\
+\end{longtable}
+}
+
+\end{document}
